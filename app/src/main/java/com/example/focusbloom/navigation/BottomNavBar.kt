@@ -27,7 +27,6 @@ fun BottomNavBar(
         val items = listOf(
             BottomNavItem.Home,
             BottomNavItem.Timer,
-            BottomNavItem.Add,
             BottomNavItem.Avatar,
             BottomNavItem.Profile
         )

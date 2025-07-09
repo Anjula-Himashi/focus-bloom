@@ -14,6 +14,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -62,9 +64,17 @@ fun MainScreen() {
                 selectedItem = selectedItem,
                 onItemSelected = { selectedItem = it }
             )
-        }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { selectedItem = BottomNavItem.Add }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add Task")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+//        isFloatingActionButtonDocked = true
     ) { innerPadding ->
-        // Your screen content depending on selectedItem
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedItem) {
                 is BottomNavItem.Home -> HomeScreen()
@@ -75,6 +85,7 @@ fun MainScreen() {
             }
         }
     }
+
 }
 
 
