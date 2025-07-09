@@ -1,5 +1,6 @@
 package com.example.focusbloom
 
+import HomeScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.focusbloom.ui.components.BottomNavBar
+import com.example.focusbloom.ui.components.BottomNavItem
+import com.example.focusbloom.ui.screens.TaskListScreen
 import com.example.focusbloom.ui.theme.FocusBloomTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,35 +37,30 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
-    var counter by remember { mutableStateOf(0) }
+    var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Home) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Focus Bloom",
-            fontSize = 28.sp,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Your friendly task manager",
-            fontSize = 18.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = { counter++ },
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text("Tasks Completed: $counter")
+    Scaffold(
+        bottomBar = {
+            BottomNavBar(
+                selectedItem = selectedItem,
+                onItemSelected = { selectedItem = it }
+            )
+        }
+    ) { innerPadding ->
+        // Your screen content depending on selectedItem
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when (selectedItem) {
+                is BottomNavItem.Home -> HomeScreen()
+                is BottomNavItem.Timer -> Text("Timer Screen")
+                is BottomNavItem.Add -> Text("Add Screen")
+                is BottomNavItem.Avatar -> Text("Avatar Screen")
+                is BottomNavItem.Profile -> Text("Profile Screen")
+            }
         }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable
