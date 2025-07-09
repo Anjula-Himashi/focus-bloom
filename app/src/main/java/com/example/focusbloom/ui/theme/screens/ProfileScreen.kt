@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen(){
+fun ProfileScreen(){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -17,6 +17,6 @@ fun HomeScreen(){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text("This is the Home screen")
+        Text("This is the Profile screen")
     }
 }
