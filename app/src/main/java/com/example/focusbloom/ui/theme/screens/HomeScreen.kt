@@ -1,5 +1,6 @@
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,8 +18,9 @@ import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-
+import androidx.compose.ui.graphics.Color
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +57,6 @@ fun HomeScreen() {
             FloatingActionButton(
                 onClick = {
                     // You can navigate or open a dialog
-                    // For now, just print to log or show snackbar if you wish
                 }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Task")
@@ -63,16 +64,12 @@ fun HomeScreen() {
         }
     ) { innerPadding ->
         Column(
-
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState()) // ⬅️ Add this
+                .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-
-
-
             // Placeholder Calendar
             Text(
                 "📅 Calendar (Placeholder)",
@@ -82,29 +79,49 @@ fun HomeScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Date navigation
+            // Date toggle
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .padding(horizontal = 8.dp)
+                    .wrapContentHeight(),
             ) {
-                IconButton(onClick = { selectedDate = selectedDate.minusDays(1) }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Previous Day"
+                val today = LocalDate.now()
+                val yesterday = today.minusDays(1)
+                val tomorrow = today.plusDays(1)
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    DateToggleButton(
+                        text = "Yesterday",
+                        selected = selectedDate == yesterday,
+                        onClick = { selectedDate = yesterday },
+                        shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
+                        modifier = Modifier.weight(1f)
+                    )
+                    DateToggleButton(
+                        text = "Today",
+                        selected = selectedDate == today,
+                        onClick = { selectedDate = today },
+                        shape = RoundedCornerShape(0.dp), // no rounding in the middle
+                        modifier = Modifier.weight(1f)
+                    )
+                    DateToggleButton(
+                        text = "Tomorrow",
+                        selected = selectedDate == tomorrow,
+                        onClick = { selectedDate = tomorrow },
+                        shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
+                        modifier = Modifier.weight(1f)
                     )
                 }
-                Text(
-                    text = selectedDate.format(DateTimeFormatter.ofPattern("EEEE, MMM d")),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                IconButton(onClick = { selectedDate = selectedDate.plusDays(1) }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowForward,
-                        contentDescription = "Next Day"
-                    )
-                }
+
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -118,28 +135,22 @@ fun HomeScreen() {
                 val completedTasks = tasksForDate.count { it.isDone }
                 val progress = if (totalTasks > 0) completedTasks.toFloat() / totalTasks else 0f
 
-// Progress display widget
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Circular progress bar with percentage
                     CircularProgressIndicator(
-                    progress = progress,
-                    modifier = Modifier.size(100.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 8.dp,
+                        progress = progress,
+                        modifier = Modifier.size(100.dp),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 8.dp,
                         trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
-
-//                    trackColor = COMPILED_CODE,
-//                    strokeCap = COMPILED_CODE,
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Text showing number of completed tasks and percentage
                     Text(
                         text = "$completedTasks of $totalTasks tasks completed (${(progress * 100).toInt()}%)",
                         style = MaterialTheme.typography.titleMedium,
@@ -160,6 +171,40 @@ fun HomeScreen() {
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DateToggleButton(
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    shape: RoundedCornerShape,
+    modifier: Modifier = Modifier
+) {
+    val selectedBackground = Color(0xFF388E3C) // Dark green
+    val unselectedBackground = Color.Transparent
+    val selectedTextColor = Color.White
+    val unselectedTextColor = MaterialTheme.colorScheme.onSurface
+
+    Surface(
+        shape = shape,
+        color = if (selected) selectedBackground else unselectedBackground,
+        border = BorderStroke(1.dp, Color.LightGray),
+        modifier = modifier
+            .height(48.dp)
+    ) {
+        TextButton(
+            onClick = onClick,
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = if (selected) selectedTextColor else unselectedTextColor
+            ),
+            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Text(text)
         }
     }
 }
