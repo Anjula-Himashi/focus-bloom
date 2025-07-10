@@ -3,6 +3,8 @@ package com.example.focusbloom.ui.components
 import Task
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,18 +15,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TaskItem(
     task: Task,
-    onToggleDone: () -> Unit
+    onToggleDone: () -> Unit,
+    onStartClick: () -> Unit = {}
 ) {
-    val activeColor = Color(0xFFE8F5E9)      // Soft mint green
-    val completedColor = Color(0xFFC8E6C9)   // Pale green
-    val textColor = if (task.isDone) Color.DarkGray else Color.Black
-    val checkColor = Color(0xFF388E3C)       // Leafy green
+    val activeColor = Color(0xFFFFFFFF)      // White
+    val completedColor = Color(0xFFF0F0F0)   // Light gray
+    val textColor = if (task.isDone) Color(0xFF777777) else Color(0xFF333333) // Dark gray text
+    val checkColor = Color(0xFF388E3C)       // Medium green for brand consistency
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (task.isDone) completedColor else activeColor
         ),
@@ -33,9 +36,10 @@ fun TaskItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Checkbox
             Checkbox(
                 checked = task.isDone,
                 onCheckedChange = { onToggleDone() },
@@ -47,10 +51,31 @@ fun TaskItem(
 
             Spacer(modifier = Modifier.width(12.dp))
 
+            // Task Title
             Text(
                 text = task.title,
                 style = MaterialTheme.typography.bodyLarge.copy(color = textColor)
             )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            // Start Button with Icon
+            TextButton(
+                onClick = onStartClick,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = checkColor
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = "Start"
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Start",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }

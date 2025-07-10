@@ -13,23 +13,15 @@ import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.focusbloom.ui.components.BottomNavBar
 import com.example.focusbloom.ui.components.BottomNavItem
 import com.example.focusbloom.ui.components.TaskItem
-import com.example.focusbloom.ui.theme.FocusBloomTheme
 import java.time.LocalDate
-
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -50,7 +42,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,16 +55,7 @@ fun MainScreen() {
                 selectedItem = selectedItem,
                 onItemSelected = { selectedItem = it }
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { selectedItem = BottomNavItem.Add }
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Task")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-//        isFloatingActionButtonDocked = true
+        }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedItem) {
@@ -85,11 +67,29 @@ fun MainScreen() {
             }
         }
     }
-
 }
 
+/**
+ * Custom Theme
+ */
+@Composable
+fun FocusBloomTheme(content: @Composable () -> Unit) {
+    val LightColors = lightColorScheme(
+        primary = Color(0xFF388E3C),         // Deep green primary
+        surface = Color(0xFFE8F5E9),         // Light green surfaces
+        background = Color(0xFFF1FDF1),      // Very light green background
+        onSurface = Color.Black              // Text on surface
+    )
 
+    MaterialTheme(
+        colorScheme = LightColors,
+        content = content
+    )
+}
 
+/**
+ * Previews
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
@@ -105,11 +105,11 @@ fun PreviewMainScreen() {
 fun PreviewTaskItem() {
     Column {
         TaskItem(
-            task = Task("Buy groceries",LocalDate.now(), false),
+            task = Task("Buy groceries", LocalDate.now(), false),
             onToggleDone = {}
         )
         TaskItem(
-            task = Task("Read a book",LocalDate.now(), true),
+            task = Task("Read a book", LocalDate.now(), true),
             onToggleDone = {}
         )
     }
