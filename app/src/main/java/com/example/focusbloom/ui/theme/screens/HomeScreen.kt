@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.graphics.Color
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -71,11 +72,15 @@ fun HomeScreen() {
                 .padding(16.dp)
         ) {
             // Placeholder Calendar
-            Text(
-                "📅 Calendar (Placeholder)",
-                fontSize = 18.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+//            TaskWeekCalendar(
+//                selectedDate = selectedDate,
+//                onDateSelected = { selectedDate = it },
+//                taskDates = allTasks.map { it.date }.toSet()
+//            )
+                Text(
+                    "Calender"
+                )
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
