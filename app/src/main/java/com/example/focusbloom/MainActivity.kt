@@ -12,9 +12,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,26 +58,41 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     var selectedItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Home) }
+    var showAddScreen by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
             BottomNavBar(
                 selectedItem = selectedItem,
-                onItemSelected = { selectedItem = it }
+                onItemSelected = {
+                    selectedItem = it
+                    showAddScreen = false // reset when switching tabs
+                }
             )
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            when (selectedItem) {
-                is BottomNavItem.Home -> HomeScreen()
-                is BottomNavItem.Timer -> TimerScreen()
-                is BottomNavItem.Add -> AddScreen()
-                is BottomNavItem.Avatar -> AvatarScreen()
-                is BottomNavItem.Profile -> ProfileScreen()
+            when {
+                showAddScreen -> AddScreen(
+                    onTaskSaved = {
+                        // You can add logic here to save the task
+                        showAddScreen = false
+                    },
+                    onCancel = {
+                        showAddScreen = false
+                    }
+                )
+                selectedItem is BottomNavItem.Home -> HomeScreen(
+                    onAddTaskClicked = { showAddScreen = true }
+                )
+                selectedItem is BottomNavItem.Timer -> TimerScreen()
+                selectedItem is BottomNavItem.Avatar -> AvatarScreen()
+                selectedItem is BottomNavItem.Profile -> ProfileScreen()
             }
         }
     }
 }
+
 
 /**
  * Custom Theme

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 sealed class BottomNavItem(val label: String, val icon: ImageVector) {
     object Home : BottomNavItem("Home", Icons.Filled.Home)
     object Timer : BottomNavItem("Timer", Icons.Filled.Schedule)
-    object Add : BottomNavItem("Add", Icons.Filled.NoteAdd)
+//    object Add : BottomNavItem("Add", Icons.Filled.NoteAdd)
     object Avatar : BottomNavItem("Avatar", Icons.Filled.AccountBox)
     object Profile : BottomNavItem("Profile", Icons.Filled.ManageAccounts)
 

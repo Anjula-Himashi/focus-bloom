@@ -6,28 +6,25 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import com.example.focusbloom.ui.components.TaskItem
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.ui.graphics.Color
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onAddTaskClicked: () -> Unit = {}
+) {
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
     val allTasks = remember {
@@ -49,16 +46,12 @@ fun HomeScreen() {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text("Your Tasks")
-                }
+                title = { Text("Your Tasks") }
             )
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    // You can navigate or open a dialog
-                }
+                onClick = onAddTaskClicked
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Add Task")
             }
@@ -72,25 +65,20 @@ fun HomeScreen() {
                 .padding(16.dp)
         ) {
             // Placeholder Calendar
-//            TaskWeekCalendar(
-//                selectedDate = selectedDate,
-//                onDateSelected = { selectedDate = it },
-//                taskDates = allTasks.map { it.date }.toSet()
-//            )
-                Text(
-                    "Calender"
-                )
-
+            Text(
+                "Calendar",
+                fontSize = 18.sp,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Date toggle
+            // Date Toggle
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .padding(horizontal = 8.dp)
-                    .wrapContentHeight(),
             ) {
                 val today = LocalDate.now()
                 val yesterday = today.minusDays(1)
@@ -113,7 +101,7 @@ fun HomeScreen() {
                         text = "Today",
                         selected = selectedDate == today,
                         onClick = { selectedDate = today },
-                        shape = RoundedCornerShape(0.dp), // no rounding in the middle
+                        shape = RoundedCornerShape(0.dp),
                         modifier = Modifier.weight(1f)
                     )
                     DateToggleButton(
@@ -124,9 +112,7 @@ fun HomeScreen() {
                         modifier = Modifier.weight(1f)
                     )
                 }
-
             }
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -188,7 +174,7 @@ fun DateToggleButton(
     shape: RoundedCornerShape,
     modifier: Modifier = Modifier
 ) {
-    val selectedBackground = Color(0xFF388E3C) // Dark green
+    val selectedBackground = Color(0xFF388E3C)
     val unselectedBackground = Color.Transparent
     val selectedTextColor = Color.White
     val unselectedTextColor = MaterialTheme.colorScheme.onSurface
@@ -197,8 +183,7 @@ fun DateToggleButton(
         shape = shape,
         color = if (selected) selectedBackground else unselectedBackground,
         border = BorderStroke(1.dp, Color.LightGray),
-        modifier = modifier
-            .height(48.dp)
+        modifier = modifier.height(48.dp)
     ) {
         TextButton(
             onClick = onClick,
