@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontWeight
@@ -27,12 +28,15 @@ import java.time.LocalTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TimerScreen(
-    taskName: String,
+    taskId: String,
     onBack: () -> Unit
 ) {
     var isRunning by remember { mutableStateOf(false) }
     var elapsedTime by remember { mutableStateOf(0L) }
     var displayAnalog by remember { mutableStateOf(false) }
+    // State to track if the timer has ever been started
+    var hasStarted by remember { mutableStateOf(false) }
+
 
     // Tick every second
     LaunchedEffect(isRunning) {
@@ -47,13 +51,21 @@ fun TimerScreen(
             .fillMaxSize()
             .padding(24.dp),
         contentAlignment = Alignment.Center
+
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = taskName,
+                text = taskId,
                 fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            Text(
+                text = "work",
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 32.dp)
             )
@@ -61,7 +73,7 @@ fun TimerScreen(
             // Toggle between Analog and Digital
             Box(
                 modifier = Modifier
-                    .size(200.dp),
+                    .size(300.dp),
                 contentAlignment = Alignment.Center
             ) {
                 if (displayAnalog) {
@@ -82,31 +94,54 @@ fun TimerScreen(
             // Control Buttons
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 32.dp)
+
             ) {
-                IconButton(
-                    onClick = { isRunning = true },
-                    enabled = !isRunning
+                Box(
+                    modifier = Modifier
+                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
+                        .padding(8.dp)
                 ) {
-                    Icon(Icons.Default.PlayArrow, contentDescription = "Start", tint = Color.Green)
-                }
+                    IconButton(
+                        onClick = {
+                            isRunning = !isRunning // Toggle state
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            contentDescription = if (isRunning) "Pause" else "Start",
+                            tint = if (isRunning) Color.Black else Color.Black,
+                                    modifier = Modifier.size(48.dp)
 
-                IconButton(
-                    onClick = { isRunning = false },
-                    enabled = isRunning
-                ) {
-                    Icon(Icons.Default.Pause, contentDescription = "Pause", tint = Color.Yellow)
-                }
-
-                IconButton(
-                    onClick = {
-                        isRunning = false
-                        elapsedTime = 0
+                        )
                     }
+                }
+
+                Box(
+                    modifier = Modifier
+                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
+                        .padding(8.dp)
                 ) {
-                    Icon(Icons.Default.Stop, contentDescription = "Stop", tint = Color.Red)
+                    IconButton(
+                        onClick = {
+                            isRunning = false
+                            elapsedTime = 0
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Stop,
+                            contentDescription = "Stop",
+                            tint = Color.Black,
+                            modifier = Modifier.size(48.dp)
+
+                        )
+                    }
                 }
             }
+
+
         }
     }
 }
@@ -121,10 +156,10 @@ fun DigitalClock(elapsedSeconds: Long) {
         modifier = Modifier
             .padding(32.dp)
             .fillMaxWidth()
-            .height(120.dp)
+            .fillMaxHeight(0.9f)
             .border(
                 width = 4.dp,
-                color = Color.Black,
+                color = Color(0xFFC0C0C0),
                 shape = RoundedCornerShape(16.dp)
             )
             .background(
@@ -160,6 +195,11 @@ fun AnalogClock(elapsedSeconds: Long) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .border(
+                width = 4.dp,
+                color = Color(0xFFC0C0C0),
+                shape = RoundedCornerShape(150.dp)
+            )
     ) {
         val radius = size.minDimension / 2
         val bezelRadius = radius - 8.dp.toPx()
