@@ -85,7 +85,11 @@ fun MainScreen() {
                 selectedItem is BottomNavItem.Home -> HomeScreen(
                     onAddTaskClicked = { showAddScreen = true }
                 )
-                selectedItem is BottomNavItem.Timer -> TimerScreen()
+                selectedItem is BottomNavItem.Timer -> TimerScreen(
+                    taskName = "Study Kotlin",
+                    onBack = { /* do nothing */ }
+                )
+
                 selectedItem is BottomNavItem.Avatar -> AvatarScreen()
                 selectedItem is BottomNavItem.Profile -> ProfileScreen()
             }
