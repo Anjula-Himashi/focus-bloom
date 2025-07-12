@@ -86,7 +86,7 @@ fun MainScreen() {
                     onAddTaskClicked = { showAddScreen = true }
                 )
                 selectedItem is BottomNavItem.Timer -> TimerScreen(
-                    taskName = "Study Kotlin",
+                    taskId = "Study Kotlin",
                     onBack = { /* do nothing */ }
                 )
 
