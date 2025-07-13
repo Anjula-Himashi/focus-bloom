@@ -1,4 +1,5 @@
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -18,10 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+
+import com.example.focusbloom.R // ✅ THIS is your app's R
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,14 +66,21 @@ fun ProfileScreen(
                 modifier = Modifier
                     .size(110.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF90A4AE)),
+                    .border(
+                        width = 3.dp,
+                        color = Color(0xFF37474F), // Dark, elegant border
+                        shape = CircleShape
+                    )
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
+                Image(
+                    painter = painterResource(R.drawable.avatar), // ✅ this assumes avatar.png is in res/drawable
                     contentDescription = "Profile Picture",
-                    tint = Color.White,
-                    modifier = Modifier.size(60.dp)
+                    modifier = Modifier.fillMaxSize()
+                        .clip(CircleShape),
+
+                    contentScale = ContentScale.Crop
                 )
             }
 
