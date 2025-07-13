@@ -91,7 +91,7 @@ fun MainScreen() {
                 )
 
                 selectedItem is BottomNavItem.Avatar -> AvatarScreen()
-                selectedItem is BottomNavItem.Profile -> ProfileScreen()
+                selectedItem is BottomNavItem.Profile -> ProfileScreen("Anjula Himashi",200,2,250.5)
             }
         }
     }

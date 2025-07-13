@@ -31,9 +31,9 @@ fun HomeScreen(
         mutableStateListOf(
             Task("Study Kotlin", LocalDate.now(), false),
             Task("Read a book", LocalDate.now(), false),
-            Task("Read 1 book", LocalDate.now(), false),
+            Task("Read 1 book", LocalDate.now(), true),
             Task("Read 2 book", LocalDate.now(), false),
-            Task("Read 3 book", LocalDate.now(), false),
+            Task("Read 3 book", LocalDate.now(), true),
             Task("Read 4 book", LocalDate.now(), false),
             Task("Read 5 book", LocalDate.now(), false),
             Task("Workout", LocalDate.now().minusDays(1), true),
