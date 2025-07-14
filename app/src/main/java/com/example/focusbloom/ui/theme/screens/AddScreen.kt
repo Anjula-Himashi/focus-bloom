@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.example.focusbloom.ui.theme.model.Task
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -30,7 +31,6 @@ fun AddScreen(
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var showDatePicker by remember { mutableStateOf(false) }
 
-    // Task Types
     val defaultTypes = remember { mutableStateListOf("Work", "Personal", "Study", "Other") }
     var selectedType by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -39,24 +39,24 @@ fun AddScreen(
 
     Box(
         modifier = Modifier
-        .fillMaxSize()
-        .wrapContentSize(Alignment.Center)
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
     ) {
         Card(
             colors = CardDefaults.cardColors(
-                containerColor = Color(0x11F7F7F7) // Light background inside the card
+                containerColor = Color(0x11F7F7F7)
             ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 8.dp
             ),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
-                .fillMaxWidth(0.9f) // Make the card slightly smaller than screen width
+                .fillMaxWidth(0.9f)
                 .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .padding(24.dp), // Inner padding
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
@@ -125,7 +125,6 @@ fun AddScreen(
                     }
                 }
 
-                // Custom type input
                 if (showCustomInput) {
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -144,7 +143,7 @@ fun AddScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Date Input with Icon
+                // Date input
                 OutlinedTextField(
                     value = selectedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
                     onValueChange = {
@@ -232,5 +231,3 @@ fun AddScreen(
         }
     }
 }
-
-// You might need to adjust your Task data class

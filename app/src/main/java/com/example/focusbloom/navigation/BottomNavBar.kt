@@ -1,4 +1,4 @@
-package com.example.focusbloom.ui.components
+package com.example.focusbloom.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -1,5 +1,8 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
+package com.example.focusbloom.ui.theme.screens
+
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
