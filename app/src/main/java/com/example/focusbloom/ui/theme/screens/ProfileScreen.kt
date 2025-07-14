@@ -1,6 +1,5 @@
 package com.example.focusbloom.ui.theme.screens
 
-
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,11 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,40 +23,29 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.focusbloom.R
+import com.example.focusbloom.ui.theme.components.MyScreen
 
-import com.example.focusbloom.R // ✅ THIS is your app's R
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     userName: String,
     totalHours: Int,
     totalTasksCompleted: Int,
-    totalMoney: Double
+    totalMoney: Double,
+    onAddTaskClicked: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+    MyScreen(
+        title = "Your Profile",
+        moneyEarned = totalMoney,
+        onAddTaskClicked = onAddTaskClicked,
+        onNavigate = onNavigate
     ) {
-        // Top App Bar with darker background
-        TopAppBar(
-            title = {
-                Text(
-                    text = "Your Profile",
-                    color = Color.White
-                )
-            },
-            modifier = Modifier.background(Color(0xFF0D47A1))
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Avatar
@@ -71,18 +55,18 @@ fun ProfileScreen(
                     .clip(CircleShape)
                     .border(
                         width = 3.dp,
-                        color = Color(0xFF37474F), // Dark, elegant border
+                        color = Color(0xFF37474F),
                         shape = CircleShape
                     )
                     .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(R.drawable.avatar), // ✅ this assumes avatar.png is in res/drawable
+                    painter = painterResource(R.drawable.avatar),
                     contentDescription = "Profile Picture",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .clip(CircleShape),
-
                     contentScale = ContentScale.Crop
                 )
             }
@@ -131,27 +115,6 @@ fun ProfileScreen(
             SummaryChart("Your Week in Summary")
             SummaryChart("Your Month in Summary")
             SummaryChart("Your Year in Summary")
-
-
-            // Chart Placeholder
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(200.dp)
-//                    .clip(RoundedCornerShape(12.dp))
-//                    .background(Color(0xFFF5F5F5))
-//                    .border(
-//                        BorderStroke(1.dp, Color.LightGray),
-//                        shape = RoundedCornerShape(12.dp)
-//                    ),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text(
-//                    "Chart will be here",
-//                    fontSize = 14.sp,
-//                    color = Color.Gray
-//                )
-//            }
         }
     }
 }

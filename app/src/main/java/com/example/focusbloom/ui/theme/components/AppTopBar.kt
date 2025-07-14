@@ -63,17 +63,22 @@ fun MyScreen(
                                     .clickable { /* action if needed */ },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Image(
-                                    painter = painterResource(R.drawable.coins3),
-                                    contentDescription = "Coins",
-                                    modifier = Modifier.size(48.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
+
                                 Text(
                                     text = "$${String.format("%.2f", moneyEarned)}",
                                     color = Color.White,
                                     style = MaterialTheme.typography.bodyMedium
                                 )
+
+                                Spacer(modifier = Modifier.width(2.dp))
+
+
+                                Image(
+                                    painter = painterResource(R.drawable.coins3),
+                                    contentDescription = "Coins",
+                                    modifier = Modifier.size(48.dp)
+                                )
+
                             }
 
                     },

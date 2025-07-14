@@ -1,9 +1,11 @@
-package com.example.focusbloom.ui.screens
+package com.example.focusbloom.ui.theme.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -51,93 +53,101 @@ fun HomeScreen(
         onAddTaskClicked = onAddTaskClicked,
         onNavigate = onNavigate
     ) {
-        // Calendar placeholder
-        Text(
-            "Calendar",
-            fontSize = 18.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
+        val scrollState = rememberScrollState()
 
-        // Date selection row
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
+                .fillMaxSize()
+                .verticalScroll(scrollState)
         ) {
-            val today = LocalDate.now()
-            val yesterday = today.minusDays(1)
-            val tomorrow = today.plusDays(1)
-
-            DateToggleButton(
-                text = "Yesterday",
-                selected = selectedDate == yesterday,
-                onClick = { selectedDate = yesterday },
-                shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
-                modifier = Modifier.weight(1f)
-            )
-            DateToggleButton(
-                text = "Today",
-                selected = selectedDate == today,
-                onClick = { selectedDate = today },
-                shape = RoundedCornerShape(0.dp),
-                modifier = Modifier.weight(1f)
-            )
-            DateToggleButton(
-                text = "Tomorrow",
-                selected = selectedDate == tomorrow,
-                onClick = { selectedDate = tomorrow },
-                shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        if (tasksForDate.isEmpty()) {
             Text(
-                "No tasks for this date.",
+                "Calendar",
+                fontSize = 18.sp,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-        } else {
-            val totalTasks = tasksForDate.size
-            val completedTasks = tasksForDate.count { it.isDone }
-            val progress =
-                if (totalTasks > 0) completedTasks.toFloat() / totalTasks else 0f
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
+            // Date selection row
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .height(64.dp)
             ) {
-                CircularProgressIndicator(
-                    progress = progress,
-                    modifier = Modifier.size(100.dp),
-                    strokeWidth = 8.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                val today = LocalDate.now()
+                val yesterday = today.minusDays(1)
+                val tomorrow = today.plusDays(1)
+
+                DateToggleButton(
+                    text = "Yesterday",
+                    selected = selectedDate == yesterday,
+                    onClick = { selectedDate = yesterday },
+                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
+                    modifier = Modifier.weight(1f)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "$completedTasks of $totalTasks tasks completed (${(progress * 100).toInt()}%)",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
+                DateToggleButton(
+                    text = "Today",
+                    selected = selectedDate == today,
+                    onClick = { selectedDate = today },
+                    shape = RoundedCornerShape(0.dp),
+                    modifier = Modifier.weight(1f)
+                )
+                DateToggleButton(
+                    text = "Tomorrow",
+                    selected = selectedDate == tomorrow,
+                    onClick = { selectedDate = tomorrow },
+                    shape = RoundedCornerShape(topEnd = 12.dp, bottomEnd = 12.dp),
+                    modifier = Modifier.weight(1f)
                 )
             }
 
-            tasksForDate.forEach { task ->
-                TaskItem(
-                    task = task,
-                    onToggleDone = {
-                        val index = allTasks.indexOf(task)
-                        if (index != -1) {
-                            allTasks[index] = task.copy(isDone = !task.isDone)
-                        }
-                    }
+            Spacer(modifier = Modifier.height(24.dp))
+
+            if (tasksForDate.isEmpty()) {
+                Text(
+                    "No tasks for this date.",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+            } else {
+                val totalTasks = tasksForDate.size
+                val completedTasks = tasksForDate.count { it.isDone }
+                val progress =
+                    if (totalTasks > 0) completedTasks.toFloat() / totalTasks else 0f
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        progress = progress,
+                        modifier = Modifier.size(100.dp),
+                        strokeWidth = 8.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "$completedTasks of $totalTasks tasks completed (${(progress * 100).toInt()}%)",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                tasksForDate.forEach { task ->
+                    TaskItem(
+                        task = task,
+                        onToggleDone = {
+                            val index = allTasks.indexOf(task)
+                            if (index != -1) {
+                                allTasks[index] = task.copy(isDone = !task.isDone)
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
         }
     }
+
 }

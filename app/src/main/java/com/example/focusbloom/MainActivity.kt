@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.focusbloom.navigation.BottomNavBar
 import com.example.focusbloom.navigation.BottomNavItem
 import com.example.focusbloom.ui.components.TaskItem
-import com.example.focusbloom.ui.screens.HomeScreen
+import com.example.focusbloom.ui.theme.screens.HomeScreen
 import com.example.focusbloom.ui.theme.model.Task
 import com.example.focusbloom.ui.theme.screens.AvatarScreen
 import com.example.focusbloom.ui.theme.screens.ProfileScreen
