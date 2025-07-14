@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.focusbloom.ui.theme.components.MyScreen
 import kotlinx.coroutines.delay
 import java.time.LocalTime
 
@@ -32,7 +33,9 @@ import java.time.LocalTime
 @Composable
 fun TimerScreen(
     taskId: String,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onAddTaskClicked: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
     var isRunning by remember { mutableStateOf(false) }
     var elapsedTime by remember { mutableStateOf(0L) }
@@ -49,102 +52,109 @@ fun TimerScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
-
+    MyScreen(
+        title = "Your Timer",
+        moneyEarned = 123.45,
+        onAddTaskClicked = onAddTaskClicked,
+        onNavigate = onNavigate
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+
         ) {
-            Text(
-                text = taskId,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            Text(
-                text = "work",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
-
-            // Toggle between Analog and Digital
-            Box(
-                modifier = Modifier
-                    .size(300.dp),
-                contentAlignment = Alignment.Center
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (displayAnalog) {
-                    AnalogClock(elapsedTime)
-                } else {
-                    DigitalClock(elapsedTime)
-                }
-            }
+                Text(
+                    text = taskId,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "work",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
 
-            TextButton(onClick = { displayAnalog = !displayAnalog }) {
-                Text(if (displayAnalog) "Switch to Digital" else "Switch to Analog")
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Control Buttons
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-
-            ) {
+                // Toggle between Analog and Digital
                 Box(
                     modifier = Modifier
-                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
-                        .padding(8.dp)
+                        .size(300.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    IconButton(
-                        onClick = {
-                            isRunning = !isRunning // Toggle state
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            contentDescription = if (isRunning) "Pause" else "Start",
-                            tint = if (isRunning) Color.Black else Color.Black,
-                                    modifier = Modifier.size(48.dp)
-
-                        )
+                    if (displayAnalog) {
+                        AnalogClock(elapsedTime)
+                    } else {
+                        DigitalClock(elapsedTime)
                     }
                 }
 
-                Box(
-                    modifier = Modifier
-                        .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
-                        .padding(8.dp)
-                ) {
-                    IconButton(
-                        onClick = {
-                            isRunning = false
-                            elapsedTime = 0
-                        }
-                    ) {
-                        Icon(
-                            Icons.Default.Stop,
-                            contentDescription = "Stop",
-                            tint = Color.Black,
-                            modifier = Modifier.size(48.dp)
+                Spacer(modifier = Modifier.height(16.dp))
 
-                        )
+                TextButton(onClick = { displayAnalog = !displayAnalog }) {
+                    Text(if (displayAnalog) "Switch to Digital" else "Switch to Analog")
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // Control Buttons
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
+                            .padding(8.dp)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                isRunning = !isRunning // Toggle state
+                            }
+                        ) {
+                            Icon(
+                                imageVector = if (isRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                                contentDescription = if (isRunning) "Pause" else "Start",
+                                tint = if (isRunning) Color.Black else Color.Black,
+                                modifier = Modifier.size(48.dp)
+
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .border(2.dp, Color.Gray, shape = RoundedCornerShape(50))
+                            .padding(8.dp)
+                    ) {
+                        IconButton(
+                            onClick = {
+                                isRunning = false
+                                elapsedTime = 0
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Stop,
+                                contentDescription = "Stop",
+                                tint = Color.Black,
+                                modifier = Modifier.size(48.dp)
+
+                            )
+                        }
                     }
                 }
+
+
             }
-
-
         }
     }
 }

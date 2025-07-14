@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.example.focusbloom.ui.theme.components.MyScreen
 import com.example.focusbloom.ui.theme.model.Task
 import java.time.Instant
 import java.time.LocalDate
@@ -25,7 +26,9 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AddScreen(
     onTaskSaved: (Task) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    onAddTaskClicked: () -> Unit = {},
+    onNavigate: (String) -> Unit = {}
 ) {
     var taskName by remember { mutableStateOf("") }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
@@ -37,100 +40,46 @@ fun AddScreen(
     var customType by remember { mutableStateOf("") }
     var showCustomInput by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+    MyScreen(
+        title = "Your Timer",
+        moneyEarned = 123.45,
+        onAddTaskClicked = onAddTaskClicked,
+        onNavigate = onNavigate
     ) {
-        Card(
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0x11F7F7F7)
-            ),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 8.dp
-            ),
-            shape = RoundedCornerShape(16.dp),
+        Box(
             modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .padding(16.dp)
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center)
         ) {
-            Column(
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0x11F7F7F7)
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 8.dp
+                ),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(0.9f)
+                    .padding(16.dp)
             ) {
-                Text(
-                    text = "Add New Task",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Task Name
-                OutlinedTextField(
-                    value = taskName,
-                    onValueChange = { taskName = it },
-                    label = { Text("Task Name") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    ),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Task Type Dropdown
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    OutlinedTextField(
-                        value = if (showCustomInput) customType else selectedType,
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text("Task Type") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .fillMaxWidth(),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedContainerColor = Color.White,
-                            focusedContainerColor = Color.White
-                        )
+                    Text(
+                        text = "Add New Task",
+                        style = MaterialTheme.typography.headlineSmall
                     )
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        defaultTypes.forEach { type ->
-                            DropdownMenuItem(
-                                text = { Text(type) },
-                                onClick = {
-                                    if (type == "Other") {
-                                        showCustomInput = true
-                                        selectedType = ""
-                                    } else {
-                                        selectedType = type
-                                        showCustomInput = false
-                                    }
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
-                }
 
-                if (showCustomInput) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Task Name
                     OutlinedTextField(
-                        value = customType,
-                        onValueChange = { customType = it },
-                        label = { Text("Custom Type") },
+                        value = taskName,
+                        onValueChange = { taskName = it },
+                        label = { Text("Task Name") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -139,92 +88,153 @@ fun AddScreen(
                         ),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
                     )
-                }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                // Date input
-                OutlinedTextField(
-                    value = selectedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
-                    onValueChange = {
-                        runCatching {
-                            LocalDate.parse(it, DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-                        }.onSuccess { date ->
-                            selectedDate = date
-                        }
-                    },
-                    label = { Text("Date") },
-                    singleLine = true,
-                    trailingIcon = {
-                        IconButton(onClick = { showDatePicker = true }) {
-                            Icon(Icons.Default.CalendarToday, contentDescription = "Pick date")
-                        }
-                    },
-                    placeholder = { Text("YYYY/MM/DD") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.White,
-                        focusedContainerColor = Color.White
-                    )
-                )
-
-                if (showDatePicker) {
-                    DatePickerDialog(
-                        onDismissRequest = { showDatePicker = false },
-                        confirmButton = {
-                            TextButton(onClick = { showDatePicker = false }) { Text("OK") }
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                    // Task Type Dropdown
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = {
+                            expanded = !expanded
                         }
                     ) {
-                        val datePickerState = rememberDatePickerState(
-                            initialSelectedDateMillis = selectedDate.toEpochDay() * 24 * 60 * 60 * 1000
+                        OutlinedTextField(
+                            value = if (showCustomInput) customType else selectedType,
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text("Task Type") },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            )
                         )
-                        DatePicker(state = datePickerState)
-                        LaunchedEffect(datePickerState.selectedDateMillis) {
-                            datePickerState.selectedDateMillis?.let { millis ->
-                                selectedDate = Instant.ofEpochMilli(millis)
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            defaultTypes.forEach { type ->
+                                DropdownMenuItem(
+                                    text = { Text(type) },
+                                    onClick = {
+                                        if (type == "Other") {
+                                            showCustomInput = true
+                                            selectedType = ""
+                                        } else {
+                                            selectedType = type
+                                            showCustomInput = false
+                                        }
+                                        expanded = false
+                                    }
+                                )
                             }
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    OutlinedButton(
-                        onClick = onCancel,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Cancel")
+                    if (showCustomInput) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = customType,
+                            onValueChange = { customType = it },
+                            label = { Text("Custom Type") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                unfocusedContainerColor = Color.White,
+                                focusedContainerColor = Color.White
+                            ),
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+                        )
                     }
 
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(
-                        onClick = {
-                            val finalType = if (showCustomInput && customType.isNotBlank()) {
-                                if (!defaultTypes.contains(customType)) {
-                                    defaultTypes.add(customType)
-                                }
-                                customType
-                            } else {
-                                selectedType
-                            }
-
-                            if (taskName.isNotBlank()) {
-                                onTaskSaved(Task(taskName, selectedDate, false, finalType))
+                    // Date input
+                    OutlinedTextField(
+                        value = selectedDate.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+                        onValueChange = {
+                            runCatching {
+                                LocalDate.parse(it, DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+                            }.onSuccess { date ->
+                                selectedDate = date
                             }
                         },
-                        modifier = Modifier.weight(1f)
+                        label = { Text("Date") },
+                        singleLine = true,
+                        trailingIcon = {
+                            IconButton(onClick = { showDatePicker = true }) {
+                                Icon(Icons.Default.CalendarToday, contentDescription = "Pick date")
+                            }
+                        },
+                        placeholder = { Text("YYYY/MM/DD") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedContainerColor = Color.White,
+                            focusedContainerColor = Color.White
+                        )
+                    )
+
+                    if (showDatePicker) {
+                        DatePickerDialog(
+                            onDismissRequest = { showDatePicker = false },
+                            confirmButton = {
+                                TextButton(onClick = { showDatePicker = false }) { Text("OK") }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                            }
+                        ) {
+                            val datePickerState = rememberDatePickerState(
+                                initialSelectedDateMillis = selectedDate.toEpochDay() * 24 * 60 * 60 * 1000
+                            )
+                            DatePicker(state = datePickerState)
+                            LaunchedEffect(datePickerState.selectedDateMillis) {
+                                datePickerState.selectedDateMillis?.let { millis ->
+                                    selectedDate = Instant.ofEpochMilli(millis)
+                                        .atZone(ZoneId.systemDefault())
+                                        .toLocalDate()
+                                }
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text("Save Task")
+                        OutlinedButton(
+                            onClick = onCancel,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Cancel")
+                        }
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Button(
+                            onClick = {
+                                val finalType = if (showCustomInput && customType.isNotBlank()) {
+                                    if (!defaultTypes.contains(customType)) {
+                                        defaultTypes.add(customType)
+                                    }
+                                    customType
+                                } else {
+                                    selectedType
+                                }
+
+                                if (taskName.isNotBlank()) {
+                                    onTaskSaved(Task(taskName, selectedDate, false, finalType))
+                                }
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Save Task")
+                        }
                     }
                 }
             }
