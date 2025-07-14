@@ -52,6 +52,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
 //    implementation("com.kizitonwose.calendar:calendar-compose:2.7.0")
     implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.gcm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

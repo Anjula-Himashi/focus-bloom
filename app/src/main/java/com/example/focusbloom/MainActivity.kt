@@ -1,11 +1,6 @@
 package com.example.focusbloom
 
 import AddScreen
-import AvatarScreen
-import HomeScreen
-import ProfileScreen
-import Task
-import TimerScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,9 +23,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.focusbloom.ui.components.BottomNavBar
-import com.example.focusbloom.ui.components.BottomNavItem
+import com.example.focusbloom.navigation.BottomNavBar
+import com.example.focusbloom.navigation.BottomNavItem
 import com.example.focusbloom.ui.components.TaskItem
+import com.example.focusbloom.ui.screens.HomeScreen
+import com.example.focusbloom.ui.theme.model.Task
+import com.example.focusbloom.ui.theme.screens.AvatarScreen
+import com.example.focusbloom.ui.theme.screens.ProfileScreen
+import com.example.focusbloom.ui.theme.screens.TimerScreen
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
