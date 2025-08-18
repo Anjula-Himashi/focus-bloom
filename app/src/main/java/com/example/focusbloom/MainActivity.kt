@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.focusbloom.navigation.BottomNavBar
 import com.example.focusbloom.navigation.BottomNavItem
 import com.example.focusbloom.ui.components.TaskItem
@@ -32,12 +33,16 @@ import com.example.focusbloom.ui.theme.screens.AvatarScreen
 import com.example.focusbloom.ui.theme.screens.ProfileScreen
 import com.example.focusbloom.ui.theme.screens.TimerScreen
 import java.time.LocalDate
+import com.example.focusbloom.navigation.Screen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+
+
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { GoogleSignInScreen() }
 
         // Force light mode
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -48,7 +53,26 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    val navController = rememberNavController()
+
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screen.SignIn.route
+                    ) {
+                        composable(Screen.SignIn.route) {
+                            SignInScreen(
+                                onSignInClick = {
+                                    navController.navigate(Screen.Main.route) {
+                                        popUpTo(Screen.SignIn.route) { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable(Screen.Main.route) {
+                            MainScreen()
+                        }
+                    }
+
                 }
             }
         }
