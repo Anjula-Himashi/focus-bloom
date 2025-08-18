@@ -1,0 +1,1 @@
+data class TokenRequest(val token: String)

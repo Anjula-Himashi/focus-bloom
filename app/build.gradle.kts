@@ -50,9 +50,24 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation("androidx.compose.material:material-icons-extended")
+//    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+    implementation (libs.androidx.lifecycle.runtime.ktx.v262)
+    implementation (libs.androidx.activity.compose.v190)
+
+    implementation ("androidx.navigation:navigation-compose:2.9.3")
+//    implementation "com.google.android.gms:play-services-auth:20.7.0" // For Google Sign-In
+
+
+
+
 //    implementation("com.kizitonwose.calendar:calendar-compose:2.7.0")
+
     implementation(libs.androidx.appcompat)
     implementation(libs.play.services.gcm)
+//    implementation(libs.androidx.navigation.compose.jvmstubs)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,4 +75,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
 }
